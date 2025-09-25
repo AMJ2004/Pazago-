@@ -6,7 +6,7 @@ import { generateEmptyFromSchema, checkEvalStorageFields } from '@mastra/core/ut
 import { Mastra } from '@mastra/core/mastra';
 import { openai as openai$2 } from '@ai-sdk/openai';
 import { Agent, MessageList } from '@mastra/core/agent';
-import { vectorSearchTool } from './tools/db6ca8af-5249-4839-aeeb-f661c943d750.mjs';
+import { vectorSearchTool } from './tools/81d99594-c2b5-4c54-bb59-50baf7379a49.mjs';
 import crypto$1, { randomUUID } from 'crypto';
 import { readdir, readFile, mkdtemp, rm, writeFile, mkdir, copyFile, stat } from 'fs/promises';
 import * as https from 'https';
@@ -36,6 +36,11 @@ import { createRequire } from 'module';
 import { tmpdir } from 'os';
 import { createWorkflow, createStep } from '@mastra/core/workflows';
 import { tools } from './tools.mjs';
+import '@neondatabase/serverless';
+import 'drizzle-orm/neon-serverless';
+import 'ws';
+import 'drizzle-orm';
+import 'openai';
 
 
 // -- Shims --

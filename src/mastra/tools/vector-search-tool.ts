@@ -1,5 +1,8 @@
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
+import { VectorStore } from "../../services/vector-store";
+
+const vectorStore = new VectorStore();
 
 export const vectorSearchTool = createTool({
   id: "vector-search",
@@ -23,21 +26,30 @@ export const vectorSearchTool = createTool({
   }),
   execute: async (context) => {
     const { query, limit = 5, year_filter } = context.input;
-    // TODO: Implement actual vector search against PostgreSQL with pgvector
-    // For now, return a placeholder that shows the expected structure
-    return {
-      results: [
-        {
-          content: "Investment philosophy placeholder - will be replaced with actual document content",
-          metadata: {
-            year: "2023",
-            document: "Berkshire Hathaway Annual Letter 2023",
-            page: 1
-          },
-          similarity_score: 0.95
-        }
-      ],
-      summary: `Found ${limit} relevant passages about "${query}" in Berkshire Hathaway shareholder letters.`
-    };
+    
+    try {
+      const results = await vectorStore.searchSimilar(query, limit, year_filter);
+      
+      const formattedResults = results.map(result => ({
+        content: result.content,
+        metadata: {
+          year: result.metadata.year,
+          document: result.metadata.filename,
+          page: result.metadata.chunk_index + 1
+        },
+        similarity_score: result.similarity_score
+      }));
+      
+      return {
+        results: formattedResults,
+        summary: `Found ${results.length} relevant passages about "${query}" in Berkshire Hathaway shareholder letters${year_filter ? ` from ${year_filter}` : ''}.`
+      };
+    } catch (error) {
+      console.error('Vector search error:', error);
+      return {
+        results: [],
+        summary: `Error searching for "${query}". Please make sure documents are loaded in the database.`
+      };
+    }
   }
 });
