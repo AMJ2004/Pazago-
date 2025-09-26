@@ -9,7 +9,8 @@
     "start": "mastra start",
     "load-data": "tsx src/scripts/load-sample-data.ts",
     "test-rag": "tsx src/scripts/test-rag.ts",
-    "validate-content": "tsx src/scripts/validate-authentic-content.ts"
+    "validate-content": "tsx src/scripts/validate-authentic-content.ts",
+    "prestart": "node -e \"if(!process.env.OPENAI_API_KEY){console.error(\\'ERROR: Missing OPENAI_API_KEY environment variable. See .env.example\\'); process.exit(1)}\""
   },
   "keywords": [],
   "author": "",
